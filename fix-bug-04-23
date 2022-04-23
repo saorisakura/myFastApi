@@ -1,0 +1,56 @@
+bug info:
+    ERROR:    Exception in ASGI application
+    Traceback (most recent call last):
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 372, in run_asgi
+        result = await app(self.scope, self.receive, self.send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/uvicorn/middleware/proxy_headers.py", line 75, in __call__
+        return await self.app(scope, receive, send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/uvicorn/middleware/debug.py", line 96, in __call__
+        raise exc from None
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/uvicorn/middleware/debug.py", line 93, in __call__
+        await self.app(scope, receive, inner_send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/fastapi/applications.py", line 261, in __call__
+        await super().__call__(scope, receive, send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/applications.py", line 124, in __call__
+        await self.middleware_stack(scope, receive, send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/middleware/errors.py", line 184, in __call__
+        raise exc
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/middleware/errors.py", line 162, in __call__
+        await self.app(scope, receive, _send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/exceptions.py", line 93, in __call__
+        raise exc
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/exceptions.py", line 82, in __call__
+        await self.app(scope, receive, sender)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/fastapi/middleware/asyncexitstack.py", line 21, in __call__
+        raise e
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+        await self.app(scope, receive, send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/routing.py", line 670, in __call__
+        await route.handle(scope, receive, send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/routing.py", line 266, in handle
+        await self.app(scope, receive, send)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/routing.py", line 65, in app
+        response = await func(request)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/fastapi/routing.py", line 217, in app
+        solved_result = await solve_dependencies(
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/fastapi/dependencies/utils.py", line 465, in solve_dependencies
+        response = response or Response(
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/responses.py", line 50, in __init__
+        self.init_headers(headers)
+      File "/home/ecd_xavier_1384444981707/PycharmProjects/fastApiProject/venv/lib/python3.8/site-packages/starlette/responses.py", line 79, in init_headers
+        and not (self.status_code < 200 or self.status_code in (204, 304))
+    TypeError: '<' not supported between instances of 'NoneType' and 'int'
+
+env:
+    fastapi 0.75.2 starlette 0.19
+    starlette 0.17 has no such problem
+
+solution:
+    response = response or Response(
+        # content=None,
+        # status_code=None,  # type: ignore
+        # headers=None,  # type: ignore # in Starlette
+        # media_type=None,  # type: ignore # in Starlette
+        # background=None,  # type: ignore # in Starlette
+    )
+    del response.headers['content-length']  # fix, requests.Request._init_length check this field and raise an exception
