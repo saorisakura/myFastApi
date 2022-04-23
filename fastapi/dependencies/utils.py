@@ -463,12 +463,13 @@ async def solve_dependencies(
     values: Dict[str, Any] = {}
     errors: List[ErrorWrapper] = []
     response = response or Response(
-        content=None,
-        status_code=None,  # type: ignore
-        headers=None,  # type: ignore # in Starlette
-        media_type=None,  # type: ignore # in Starlette
-        background=None,  # type: ignore # in Starlette
+        # content=None,
+        # status_code=None,  # type: ignore
+        # headers=None,  # type: ignore # in Starlette
+        # media_type=None,  # type: ignore # in Starlette
+        # background=None,  # type: ignore # in Starlette
     )
+    del response.headers['content-length']
     dependency_cache = dependency_cache or {}
     sub_dependant: Dependant
     for sub_dependant in dependant.dependencies:
