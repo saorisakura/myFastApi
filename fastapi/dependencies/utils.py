@@ -469,7 +469,7 @@ async def solve_dependencies(
         # media_type=None,  # type: ignore # in Starlette
         # background=None,  # type: ignore # in Starlette
     )
-    del response.headers['content-length']
+    del response.headers['content-length']  # fix, requests.Request._init_length check this field and raise an exception
     dependency_cache = dependency_cache or {}
     sub_dependant: Dependant
     for sub_dependant in dependant.dependencies:
