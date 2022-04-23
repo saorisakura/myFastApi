@@ -45,6 +45,17 @@ env:
     fastapi 0.75.2 starlette 0.19
     starlette 0.17 has no such problem
 
+error analysis:
+    asgi application返回response时，执行solve_dependencies时，需要构建response，并依据depend解析headers、request和body。其中构建response时，
+    response = response or Response(
+        content=None,
+        status_code=None,  # type: ignore   <----------------- error
+        headers=None,  # type: ignore # in Starlette
+        media_type=None,  # type: ignore # in Starlette
+        background=None,  # type: ignore # in Starlette
+    )
+    del response.headers['content-length']  <----------------- fix, requests.Request._init_length check this field and raise an exception
+
 solution:
     /fastapi/dependencies/utils.py:solve_dependencies
         response = response or Response(
