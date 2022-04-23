@@ -46,11 +46,12 @@ env:
     starlette 0.17 has no such problem
 
 solution:
-    response = response or Response(
-        # content=None,
-        # status_code=None,  # type: ignore
-        # headers=None,  # type: ignore # in Starlette
-        # media_type=None,  # type: ignore # in Starlette
-        # background=None,  # type: ignore # in Starlette
-    )
-    del response.headers['content-length']  # fix, requests.Request._init_length check this field and raise an exception
+    /fastapi/dependencies/utils.py:solve_dependencies
+        response = response or Response(
+            # content=None,
+            # status_code=None,  # type: ignore
+            # headers=None,  # type: ignore # in Starlette
+            # media_type=None,  # type: ignore # in Starlette
+            # background=None,  # type: ignore # in Starlette
+        )
+        del response.headers['content-length']  # fix, requests.Request._init_length check this field and raise an exception
